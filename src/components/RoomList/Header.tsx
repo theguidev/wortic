@@ -1,22 +1,65 @@
 /* eslint-disable react/no-children-prop */
 import { Badge, Button, ButtonGroup, Flex, HStack, Input, InputGroup, InputLeftElement, Spacer } from "@chakra-ui/react";
 import { MagnifyingGlass } from "phosphor-react";
+import { IFilter, TagValue } from "../../pages";
 
-export function Header() {
+interface HeaderProps {
+  handleFilter: (filter: Partial<IFilter>) => void;
+  currentFilter: IFilter;
+}
+
+const tags = [
+  {
+    id: 0,
+    title: "all",
+    color: "gray",
+  },
+  {
+    id: 1,
+    title: "new",
+    color: "red",
+  },
+  {
+    id: 2,
+    title: "hot",
+    color: "orange",
+  },
+  {
+    id: 3,
+    title: "official",
+    color: "blue",
+  }
+]
+
+export function Header({ handleFilter, currentFilter }: HeaderProps) {
+
   return (
     <Flex as="header">
       <InputGroup w="initial">
         <InputLeftElement children={<MagnifyingGlass size={20}/>} />
-        <Input type="text" placeholder="Buscar salas" />
+        <Input
+          value={currentFilter.value}
+          type="text"
+          placeholder="Buscar salas"
+          onChange={(e) => handleFilter({ value: e.target.value })} 
+        />
       </InputGroup>
 
       <Spacer />
       <Flex>
         <HStack spacing="4">
-          <Badge cursor="pointer" fontSize="lg"variant="solid" >All</Badge>
-          <Badge cursor="pointer" fontSize="lg" variant="outline" colorScheme="red">New</Badge>
-          <Badge cursor="pointer" fontSize="lg" variant="outline" colorScheme="orange">Hot</Badge>
-          <Badge cursor="pointer" fontSize="lg" variant="outline" colorScheme="blue">Official</Badge>
+          {tags.map(tag => (
+            <Badge
+              key={tag.id}
+              cursor="pointer"
+              fontSize="lg"
+              variant={tag.title === currentFilter.tag ? "solid" : "outline"}
+              colorScheme={tag.color}
+              onClick={() => handleFilter({tag: tag.title as TagValue})}
+            >
+              {tag.title}
+            </Badge>
+          ))}
         </HStack>
       </Flex>
       <Spacer />

@@ -2,6 +2,7 @@ import { SimpleGrid } from '@chakra-ui/react';
 import { RoomItem } from './RoomItem';
 
 export function RoomList() {
+
   return (
       <SimpleGrid 
         px="4"
