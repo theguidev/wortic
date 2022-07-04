@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Input, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Text, VStack } from "@chakra-ui/react";
+import { Button, FormControl, FormHelperText, FormLabel, Input, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Text, VStack } from "@chakra-ui/react";
 
 export function ModalNewRoom() {
   return (
@@ -19,6 +19,14 @@ export function ModalNewRoom() {
               <FormLabel htmlFor="image_url">Image URL</FormLabel>
               <Input type="text" id="image_url"/>
             </FormControl>
+
+            <FormControl>
+              <FormLabel htmlFor="reset_at">Reset time</FormLabel>
+              {/* TO DO - <CustomSelect></CustomSelect> to select a time */}
+              <Input type="time" />
+              <FormHelperText>Consider UTC time</FormHelperText>
+            </FormControl>
+            {/*TO DO - All words (word list submiting) */}
           </VStack>
         </form>
       </ModalBody>
