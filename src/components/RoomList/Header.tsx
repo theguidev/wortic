@@ -1,7 +1,11 @@
 /* eslint-disable react/no-children-prop */
-import { Badge, Button, ButtonGroup, Flex, HStack, Input, InputGroup, InputLeftElement, Spacer } from "@chakra-ui/react";
+import { Badge, Box, Button, ButtonGroup, Flex, HStack, Input, InputGroup, InputLeftElement, Modal, ModalOverlay, Spacer } from "@chakra-ui/react";
 import { MagnifyingGlass } from "phosphor-react";
+import { useState } from "react";
+import { FaPlusCircle } from "react-icons/fa";
 import { IFilter, TagValue } from "../../pages";
+import { ModalLogin } from "./Modals/ModalLogin";
+import { ModalNewRoom } from "./Modals/ModalNewRoom";
 
 interface HeaderProps {
   handleFilter: (filter: Partial<IFilter>) => void;
@@ -32,18 +36,25 @@ const tags = [
 ]
 
 export function Header({ handleFilter, currentFilter }: HeaderProps) {
+  const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
+  const [isModalNewRoomOpen, setIsModalNewRoomOpen] = useState(false);
 
   return (
-    <Flex as="header">
-      <InputGroup w="initial">
-        <InputLeftElement children={<MagnifyingGlass size={20}/>} />
-        <Input
-          value={currentFilter.value}
-          type="text"
-          placeholder="Buscar salas"
-          onChange={(e) => handleFilter({ value: e.target.value })} 
-        />
-      </InputGroup>
+    <Flex as="header" align="flex-start">
+      <Box>
+        <InputGroup w="initial">
+          <InputLeftElement children={<MagnifyingGlass size={20}/>} />
+          <Input
+            value={currentFilter.value}
+            type="text"
+            placeholder="Buscar salas"
+            onChange={(e) => handleFilter({ value: e.target.value })} 
+          />
+        </InputGroup>
+        <Button mt="2" colorScheme="yellow" leftIcon={<FaPlusCircle />} onClick={() => setIsModalNewRoomOpen(true)}>
+          New room
+        </Button>
+      </Box>
 
       <Spacer />
       <Flex>
@@ -65,9 +76,17 @@ export function Header({ handleFilter, currentFilter }: HeaderProps) {
       <Spacer />
 
       <ButtonGroup size="md" spacing="4" colorScheme="blue">
-        <Button>Log in</Button>
-        <Button variant="outline">Sign Up</Button>
+        <Button onClick={() => setIsModalLoginOpen(true)}>Log in</Button>
+        {/* <Button onClick={() => setIsModalOpen(true)} variant="outline">Sign Up</Button> */}
       </ButtonGroup>
+      <Modal isOpen={isModalLoginOpen} onClose={() => setIsModalLoginOpen(false)} isCentered> {/*isCentered, motionPreset backdropFilters*/}
+        <ModalOverlay backdropFilter="blur(6px)"/>
+        <ModalLogin />
+      </Modal>
+      <Modal isOpen={isModalNewRoomOpen} onClose={() => setIsModalNewRoomOpen(false)} size="4xl">
+        <ModalOverlay />
+        <ModalNewRoom />
+      </Modal>
     </Flex>
   )
 }
