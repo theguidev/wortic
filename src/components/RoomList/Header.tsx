@@ -51,7 +51,7 @@ export function Header({ handleFilter, currentFilter }: HeaderProps) {
             onChange={(e) => handleFilter({ value: e.target.value })} 
           />
         </InputGroup>
-        <Button mt="2" colorScheme="yellow" leftIcon={<FaPlusCircle />} onClick={() => setIsModalNewRoomOpen(true)}>
+        <Button mt="2" colorScheme="purple" leftIcon={<FaPlusCircle />} onClick={() => setIsModalNewRoomOpen(true)}>
           New room
         </Button>
       </Box>
