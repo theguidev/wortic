@@ -15,9 +15,11 @@ export interface IRoom {
   updated_at: string;
 }
 
+export type Difficulty = "easy" | "medium" | "hard" | "expert";
+
 export interface IWord {
   name: string;
-  difficulty: "easy" | "medium" | "hard" | "expert";
+  difficulty: Difficulty;
 }
 
 export interface IUser {

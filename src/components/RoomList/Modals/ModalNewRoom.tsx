@@ -1,7 +1,10 @@
-import { Box, Button, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Input, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Radio, RadioGroup, Text, VStack } from "@chakra-ui/react";
+import { Button, FormControl, FormErrorMessage, FormLabel, Input, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Text, useToast, VStack } from "@chakra-ui/react";
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useState } from "react";
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { IWord } from "../../../types";
+import { WordSubmitting } from "../Form/WordSubmitting";
 
 interface IFormInputs {
   name: string;
@@ -10,16 +13,41 @@ interface IFormInputs {
 
 const schema = yup.object({
   name: yup.string().required("The name field is required").max(50),
-  image_url: yup.string().url("The field value must be a url").required("The image url field is required")
+  image_url: yup.string().url("The field value must be a url").required("The image url field is required"),
 }).required();
 
 export function ModalNewRoom() {
+  const [words, setWords] = useState<IWord[]>([]);
+  const toast = useToast();
+
   const { register, handleSubmit, formState: { errors } } = useForm<IFormInputs>({
     resolver: yupResolver(schema)
   });
 
   const onSubmit = (data: IFormInputs) => {
-    console.log({data});
+    if(words.length < 5) {
+      return toast({
+        title: "Failed",
+        description: "You must provide at least 5 words",
+        status: "error",
+        position: "top-right",
+        isClosable: true
+      })
+    }
+    console.log({data: {...data, words}});
+  }
+
+  const addNewWord = (word: IWord, setError: (err: {field: string, message: string}) => void) => {
+    if(word.name.length > 16) return setError({ field: "name", message: "Too long"});
+    if(words.find(wordState => wordState.name === word.name)) return setError({ field: "name", message: "You cannot create duplicated words"})
+    setError({field: "", message: ""});
+    setWords([...words, word]);
+  }
+
+  const removeWord = (name: string) => {
+    setWords(
+      words.filter(word => word.name !== name)
+    )
   }
 
   return (
@@ -51,32 +79,8 @@ export function ModalNewRoom() {
                 <FormHelperText>Consider UTC time</FormHelperText>
               </FormControl> */}
               {/*TO DO - All words (word list submiting) */}
-              <Flex w="100%" gap="8">
-                <Box>
-                  <FormControl flex="1">
-                    <FormLabel htmlFor="image_url">Words</FormLabel>
-                    <VStack spacing="4">
-                      <Input type="text" placeholder="Steve" />
-                      
-                      <RadioGroup>
-                        <HStack spacing="4">
-                          <Radio value="easy">Easy</Radio>
-                          <Radio value="medium">Medium</Radio>
-                          <Radio value="hard">Hard</Radio>
-                          <Radio value="expert">Expert</Radio>
-                        </HStack>
-                      </RadioGroup>
-
-                    </VStack>
-                    <Button mt="2" colorScheme="purple">Register word</Button>
-                    <FormHelperText>Here is where you can register your words</FormHelperText>
-                  </FormControl>
-                </Box>
-
-                <Box bgColor="gray.900" flex="1" rounded="2xl">
-
-                </Box>
-              </Flex>
+              <WordSubmitting addNewWord={addNewWord} words={words} removeWord={removeWord}/>
+              
             </VStack>
         </ModalBody>
 
