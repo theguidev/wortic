@@ -15,7 +15,10 @@ export interface IRoom {
   updated_at: string;
 }
 
-export interface IWord {}
+export interface IWord {
+  name: string;
+  difficulty: "easy" | "medium" | "hard" | "expert";
+}
 
 export interface IUser {
   id: string;
